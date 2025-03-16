@@ -18,22 +18,24 @@
             margin: 0 auto;
         }
         button {
-            background-color: #1DB954;
+            background-color: #808080; /* Gray color */
             color: white;
-            padding: 15px 30px;
+            padding: 15px; /* Equal padding for round shape */
             border: none;
             font-size: 18px;
             cursor: pointer;
-            border-radius: 25px;
+            border-radius: 50%; /* Round shape */
+            width: 60px; /* Fixed width for circle */
+            height: 60px; /* Fixed height for circle */
             margin: 10px;
             transition: all 0.3s ease;
         }
         button:hover {
-            background-color: #17a847;
+            background-color: #666666; /* Darker gray on hover */
             transform: scale(1.05);
         }
         button.listening {
-            background-color: #ff4444;
+            background-color: #ff4444; /* Red when listening */
             animation: pulse 1s infinite;
         }
         .output {
@@ -57,9 +59,9 @@
 <body>
     <div class="container">
         <h1>Jarvis Voice Assistant</h1>
-        <button id="voiceBtn" onclick="toggleListening()">🎤 Tap to Speak</button>
+        <button id="voiceBtn" onclick="toggleListening()">🎤</button>
         <p class="output" id="output">Waiting for command...</p>
-        <p class="examples">Try: "What's the time now", "What's the day", "What's the date", "Set reminder [text]", "What is my reminder", "Search for funny cat videos", "Who is Elon Musk", "Play song [song name]"</p>
+        <p class="examples">Try: "What's the time now", "What's the day", "What's the date", "Set timer you have to go home after 5 minutes", "What is my reminder", "Clear reminders", "Search for funny cat videos", "Who is Elon Musk", "Play song [song name]"</p>
     </div>
 
     <script>
@@ -67,6 +69,24 @@
         let recognition;
         const output = document.getElementById('output');
         const voiceBtn = document.getElementById('voiceBtn');
+        let reminders = JSON.parse(localStorage.getItem("reminders")) || [];
+
+        function saveReminders() {
+            localStorage.setItem("reminders", JSON.stringify(reminders));
+        }
+
+        function checkReminders() {
+            const now = new Date().getTime();
+            reminders = reminders.filter(reminder => {
+                if (reminder.dueTime <= now) {
+                    speak(`Reminder: ${reminder.text}`);
+                    return false;
+                }
+                return true;
+            });
+            saveReminders();
+        }
+        setInterval(checkReminders, 5000); // Check every 5 seconds
 
         function toggleListening() {
             if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
@@ -83,7 +103,7 @@
                 recognition.onstart = () => {
                     isListening = true;
                     voiceBtn.classList.add('listening');
-                    voiceBtn.textContent = '🎤 Listening...';
+                    voiceBtn.textContent = '🎤';
                     output.textContent = 'Listening...';
                 };
 
@@ -95,6 +115,7 @@
                 };
 
                 recognition.onerror = (event) => {
+                    console.error("Speech Recognition Error:", event.error);
                     output.textContent = `Error: ${event.error}. Try again.`;
                     stopListening();
                 };
@@ -112,22 +133,21 @@
             }
             isListening = false;
             voiceBtn.classList.remove('listening');
-            voiceBtn.textContent = '🎤 Tap to Speak';
+            voiceBtn.textContent = '🎤';
         }
 
         async function handleCommand(command) {
             try {
-                if (command.includes("time")) {
+                if (command.match(/what(?:'s| is) the time/)) {
                     const now = new Date();
                     const hours = now.getHours() % 12 || 12;
                     const minutes = now.getMinutes().toString().padStart(2, '0');
                     const period = now.getHours() >= 12 ? "PM" : "AM";
-                    const responseText = `The time is ${hours}:${minutes} ${period}`;
-                    await speak(responseText);
+                    await speak(`The time is ${hours}:${minutes} ${period}`);
                     return;
                 }
 
-                if (command.includes("day")) {
+                if (command.match(/what(?:'s| is) the day/)) {
                     const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
                     const now = new Date();
                     const day = days[now.getDay()];
@@ -135,11 +155,49 @@
                     return;
                 }
 
+                if (command.match(/what(?:'s| is) the date/)) {
+                    const now = new Date();
+                    const date = now.toLocaleDateString();
+                    await speak(`Today's date is ${date}`);
+                    return;
+                }
+
+                if (command.includes("set timer")) {
+                    const match = command.match(/set timer (.+) after (\d+) minutes?/);
+                    if (match) {
+                        const text = match[1];
+                        const minutes = parseInt(match[2]);
+                        const dueTime = new Date().getTime() + minutes * 60000;
+                        reminders.push({ text, dueTime });
+                        saveReminders();
+                        await speak(`Timer set: ${text} in ${minutes} minutes`);
+                    } else {
+                        await speak("Please say 'set timer [text] after [minutes] minutes'");
+                    }
+                    return;
+                }
+
+                if (command.includes("what is my reminder")) {
+                    if (reminders.length > 0) {
+                        await speak(`Your reminders are: ${reminders.map(r => r.text).join(", ")}`);
+                    } else {
+                        await speak("No reminders set.");
+                    }
+                    return;
+                }
+
+                if (command.includes("clear reminders")) {
+                    reminders = [];
+                    saveReminders();
+                    await speak("All reminders have been cleared.");
+                    return;
+                }
+
                 if (command.includes("search for")) {
                     const query = command.replace("search for", "").trim();
-                    const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+                    const searchUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`;
                     window.open(searchUrl, "_blank");
-                    await speak(`Searching for ${query}`);
+                    await speak(`Searching for ${query} on YouTube`);
                     return;
                 }
 
@@ -163,22 +221,9 @@
                     return;
                 }
 
-                if (command.includes("set reminder")) {
-                    const reminder = command.replace("set reminder", "").trim();
-                    localStorage.setItem("reminder", reminder);
-                    await speak(`Reminder set: ${reminder}`);
-                    return;
-                }
-
-                if (command.includes("what is my reminder")) {
-                    const reminder = localStorage.getItem("reminder");
-                    await speak(`Your reminder is: ${reminder || "No reminder set"}`);
-                    return;
-                }
-
                 await speak("I didn't understand that.");
             } catch (error) {
-                console.error("Error:", error);
+                console.error("Command Error:", error);
                 await speak("An error occurred.");
             }
             stopListening();
@@ -186,15 +231,29 @@
 
         function speak(text) {
             output.textContent = text;
-
             return new Promise((resolve) => {
                 if ('speechSynthesis' in window) {
                     const utterance = new SpeechSynthesisUtterance(text);
-                    utterance.onend = resolve;
-                    utterance.onerror = resolve;
+                    utterance.lang = 'en-US'; // Ensure English voice
+                    utterance.volume = 1.0; // Full volume
+                    utterance.rate = 1.0; // Normal speed
+                    utterance.pitch = 1.0; // Normal pitch
+
+                    utterance.onend = () => {
+                        console.log("Speech finished:", text);
+                        resolve();
+                    };
+                    utterance.onerror = (e) => {
+                        console.error("SpeechSynthesis Error:", e.error, e.message);
+                        output.textContent = "Error speaking. Check console.";
+                        resolve();
+                    };
+                    // Ensure no pending utterances
+                    speechSynthesis.cancel();
                     speechSynthesis.speak(utterance);
                 } else {
-                    alert("Your browser does not support speech synthesis.");
+                    console.error("SpeechSynthesis not supported");
+                    output.textContent = "Speech not supported in this browser.";
                     resolve();
                 }
             });
@@ -205,4 +264,4 @@
         };
     </script>
 </body>
-  </html>
+</html>
