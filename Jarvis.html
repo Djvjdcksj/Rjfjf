@@ -12,31 +12,11 @@
             color: white;
             padding: 20px;
             margin: 0;
+            overflow: hidden;
         }
         .container {
             max-width: 600px;
             margin: 0 auto;
-        }
-        button {
-            background-color: #808080; /* Gray color */
-            color: white;
-            padding: 15px; /* Equal padding for round shape */
-            border: none;
-            font-size: 18px;
-            cursor: pointer;
-            border-radius: 50%; /* Round shape */
-            width: 60px; /* Fixed width for circle */
-            height: 60px; /* Fixed height for circle */
-            margin: 10px;
-            transition: all 0.3s ease;
-        }
-        button:hover {
-            background-color: #666666; /* Darker gray on hover */
-            transform: scale(1.05);
-        }
-        button.listening {
-            background-color: #ff4444; /* Red when listening */
-            animation: pulse 1s infinite;
         }
         .output {
             margin: 20px 0;
@@ -49,44 +29,145 @@
             color: #888;
             font-size: 16px;
         }
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
+
+        /* Mic Button Styles */
+        .mic {
+            position: relative;
+            color: #fff;
+            cursor: pointer;
+            width: 60px;
+            height: 60px;
+            margin: 20px auto;
+        }
+        .mic::before, .mic::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 100%;
+            z-index: 2;
+            box-shadow: 0 0 10px 5px #1c084f;
+        }
+        .mic::before {
+            width: 60px;
+            height: 60px;
+            background-color: #1a084e;
+        }
+        .mic::after {
+            width: 40px;
+            height: 40px;
+            background-color: #2f1e5f;
+            animation: circle-size 0.8s linear infinite alternate;
+        }
+        .mic-icon {
+            box-sizing: border-box;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(1.5);
+            display: block;
+            width: 20px;
+            height: 16px;
+            border-bottom-left-radius: 120px;
+            border-bottom-right-radius: 120px;
+            border: 2px solid;
+            border-top: 0;
+            margin-top: 10px;
+            z-index: 3;
+        }
+        .mic-icon::before, .mic-icon::after {
+            content: "";
+            display: block;
+            box-sizing: border-box;
+            position: absolute;
+        }
+        .mic-icon::before {
+            width: 2px;
+            height: 5px;
+            top: calc(100% + 1px);
+            left: 50%;
+            transform: translate(-50%, 0);
+            background-color: #fff;
+        }
+        .mic-icon::after {
+            border: 2px solid;
+            width: 8px;
+            height: 18px;
+            left: 50%;
+            top: -10px;
+            border-radius: 4px;
+            transform: translate(-50%, 0);
+        }
+        .mic-shadow {
+            width: 60px;
+            height: 60px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            border-radius: 100%;
+            z-index: 1;
+            box-shadow: 0 0 10px 5px #823ca6, 0 0 10px 5px #aab3d2, 0 0 10px 5px #5acee3, 0 0 10px 5px #1b7d8f, 0 0 10px 5px #f30bf5;
+            animation: shadow-rotate 1.5s linear infinite;
+            transform-origin: center;
+        }
+        @keyframes circle-size {
+            from {
+                width: 40px;
+                height: 40px;
+            }
+            to {
+                width: 50px;
+                height: 50px;
+            }
+        }
+        @keyframes shadow-rotate {
+            from {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+            to {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Jarvis Voice Assistant</h1>
-        <button id="voiceBtn" onclick="toggleListening()">🎤</button>
+        <div class="mic" onclick="toggleListening()">
+            <i class="mic-icon"></i>
+            <div class="mic-shadow"></div>
+        </div>
         <p class="output" id="output">Waiting for command...</p>
-        <p class="examples">Try: "What's the time now", "What's the day", "What's the date", "Set timer you have to go home after 5 minutes", "What is my reminder", "Clear reminders", "Search for funny cat videos", "Who is Elon Musk", "Play song [song name]"</p>
+        <p class="examples">Try: "What's the time now", "What's the day", "What's the date", "Set reminder [text] in [minutes] minutes", "What is my reminder", "Clear reminders", "Search for funny cat videos", "Who is Elon Musk", "Play song [song name]"</p>
     </div>
 
     <script>
         let isListening = false;
         let recognition;
         const output = document.getElementById('output');
-        const voiceBtn = document.getElementById('voiceBtn');
-        let reminders = JSON.parse(localStorage.getItem("reminders")) || [];
 
-        function saveReminders() {
-            localStorage.setItem("reminders", JSON.stringify(reminders));
+        // Initialize reminders array if it doesn't exist
+        if (!localStorage.getItem("reminders")) {
+            localStorage.setItem("reminders", JSON.stringify([]));
         }
 
+        // Function to check for due reminders
         function checkReminders() {
+            const reminders = JSON.parse(localStorage.getItem("reminders"));
             const now = new Date().getTime();
-            reminders = reminders.filter(reminder => {
+
+            reminders.forEach((reminder, index) => {
                 if (reminder.dueTime <= now) {
                     speak(`Reminder: ${reminder.text}`);
-                    return false;
+                    reminders.splice(index, 1); // Remove the reminder after notifying
+                    localStorage.setItem("reminders", JSON.stringify(reminders));
                 }
-                return true;
             });
-            saveReminders();
         }
-        setInterval(checkReminders, 5000); // Check every 5 seconds
+
+        // Check reminders every second
+        setInterval(checkReminders, 1000);
 
         function toggleListening() {
             if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
@@ -102,8 +183,6 @@
 
                 recognition.onstart = () => {
                     isListening = true;
-                    voiceBtn.classList.add('listening');
-                    voiceBtn.textContent = '🎤';
                     output.textContent = 'Listening...';
                 };
 
@@ -115,7 +194,6 @@
                 };
 
                 recognition.onerror = (event) => {
-                    console.error("Speech Recognition Error:", event.error);
                     output.textContent = `Error: ${event.error}. Try again.`;
                     stopListening();
                 };
@@ -132,22 +210,21 @@
                 recognition.stop();
             }
             isListening = false;
-            voiceBtn.classList.remove('listening');
-            voiceBtn.textContent = '🎤';
         }
 
         async function handleCommand(command) {
             try {
-                if (command.match(/what(?:'s| is) the time/)) {
+                if (command.includes("time") || command.includes("what's the time")) {
                     const now = new Date();
                     const hours = now.getHours() % 12 || 12;
                     const minutes = now.getMinutes().toString().padStart(2, '0');
                     const period = now.getHours() >= 12 ? "PM" : "AM";
-                    await speak(`The time is ${hours}:${minutes} ${period}`);
+                    const responseText = `The time is ${hours}:${minutes} ${period}`;
+                    await speak(responseText);
                     return;
                 }
 
-                if (command.match(/what(?:'s| is) the day/)) {
+                if (command.includes("day") || command.includes("what's the day")) {
                     const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
                     const now = new Date();
                     const day = days[now.getDay()];
@@ -155,49 +232,18 @@
                     return;
                 }
 
-                if (command.match(/what(?:'s| is) the date/)) {
+                if (command.includes("date") || command.includes("what's the date")) {
                     const now = new Date();
                     const date = now.toLocaleDateString();
                     await speak(`Today's date is ${date}`);
                     return;
                 }
 
-                if (command.includes("set timer")) {
-                    const match = command.match(/set timer (.+) after (\d+) minutes?/);
-                    if (match) {
-                        const text = match[1];
-                        const minutes = parseInt(match[2]);
-                        const dueTime = new Date().getTime() + minutes * 60000;
-                        reminders.push({ text, dueTime });
-                        saveReminders();
-                        await speak(`Timer set: ${text} in ${minutes} minutes`);
-                    } else {
-                        await speak("Please say 'set timer [text] after [minutes] minutes'");
-                    }
-                    return;
-                }
-
-                if (command.includes("what is my reminder")) {
-                    if (reminders.length > 0) {
-                        await speak(`Your reminders are: ${reminders.map(r => r.text).join(", ")}`);
-                    } else {
-                        await speak("No reminders set.");
-                    }
-                    return;
-                }
-
-                if (command.includes("clear reminders")) {
-                    reminders = [];
-                    saveReminders();
-                    await speak("All reminders have been cleared.");
-                    return;
-                }
-
                 if (command.includes("search for")) {
                     const query = command.replace("search for", "").trim();
-                    const searchUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`;
+                    const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
                     window.open(searchUrl, "_blank");
-                    await speak(`Searching for ${query} on YouTube`);
+                    await speak(`Searching for ${query}`);
                     return;
                 }
 
@@ -221,9 +267,39 @@
                     return;
                 }
 
+                if (command.includes("set reminder")) {
+                    const reminderText = command.replace("set reminder", "").trim();
+                    const minutesMatch = reminderText.match(/\d+/);
+                    const minutes = minutesMatch ? parseInt(minutesMatch[0]) : 1; // Default to 1 minute if no time is specified
+                    const dueTime = new Date().getTime() + minutes * 60000; // Convert minutes to milliseconds
+
+                    const reminders = JSON.parse(localStorage.getItem("reminders"));
+                    reminders.push({ text: reminderText, dueTime });
+                    localStorage.setItem("reminders", JSON.stringify(reminders));
+
+                    await speak(`Reminder set: ${reminderText} in ${minutes} minute(s)`);
+                    return;
+                }
+
+                if (command.includes("what is my reminder")) {
+                    const reminders = JSON.parse(localStorage.getItem("reminders"));
+                    if (reminders.length > 0) {
+                        await speak(`Your reminders are: ${reminders.map(r => r.text).join(", ")}`);
+                    } else {
+                        await speak("No reminders set.");
+                    }
+                    return;
+                }
+
+                if (command.includes("clear reminders")) {
+                    localStorage.setItem("reminders", JSON.stringify([]));
+                    await speak("All reminders have been cleared.");
+                    return;
+                }
+
                 await speak("I didn't understand that.");
             } catch (error) {
-                console.error("Command Error:", error);
+                console.error("Error:", error);
                 await speak("An error occurred.");
             }
             stopListening();
@@ -231,29 +307,15 @@
 
         function speak(text) {
             output.textContent = text;
+
             return new Promise((resolve) => {
                 if ('speechSynthesis' in window) {
                     const utterance = new SpeechSynthesisUtterance(text);
-                    utterance.lang = 'en-US'; // Ensure English voice
-                    utterance.volume = 1.0; // Full volume
-                    utterance.rate = 1.0; // Normal speed
-                    utterance.pitch = 1.0; // Normal pitch
-
-                    utterance.onend = () => {
-                        console.log("Speech finished:", text);
-                        resolve();
-                    };
-                    utterance.onerror = (e) => {
-                        console.error("SpeechSynthesis Error:", e.error, e.message);
-                        output.textContent = "Error speaking. Check console.";
-                        resolve();
-                    };
-                    // Ensure no pending utterances
-                    speechSynthesis.cancel();
+                    utterance.onend = resolve;
+                    utterance.onerror = resolve;
                     speechSynthesis.speak(utterance);
                 } else {
-                    console.error("SpeechSynthesis not supported");
-                    output.textContent = "Speech not supported in this browser.";
+                    alert("Your browser does not support speech synthesis.");
                     resolve();
                 }
             });
