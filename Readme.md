@@ -77,12 +77,3 @@ Star this repo if you like it! Follow me for more cool projects. Happy coding! ð
 3. **URL Check**:
    - `https://your-username.github.io/jarvis-voice-assistant/` kholen Chrome mein.
    - Mic permissions allow karen aur test karen.
-
-4. **README Update**:
-   - `README.md` file banayein ya edit karen.
-   - Upar wala text paste karen, `your-username` replace karen.
-   - Commit karen:
-     ```bash
-     git add README.md
-     git commit -m "Updated README with GitHub Pages and local server instructions"
-     git push origin main
