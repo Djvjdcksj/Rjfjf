@@ -9,12 +9,11 @@
       font-family: Arial, sans-serif;
       display: flex;
       justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
       background-color: #f4f4f4;
       transition: background-color 0.3s, color 0.3s;
-      padding-top: 150px; /* enough space for 2 stacked ads */
+      margin: 0;
+      padding-top: 150px;
+      min-height: 100vh;
     }
     #topAdContainer {
       position: fixed;
@@ -35,6 +34,7 @@
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       width: 100%;
       max-width: 400px;
+      margin: 20px;
     }
     h1 {
       text-align: center;
@@ -83,6 +83,13 @@
       background-color: #333;
       color: white;
       border: 1px solid #555;
+    }
+    @media screen and (max-width: 480px) {
+      .container {
+        padding: 15px;
+        margin: 10px;
+        width: 90%;
+      }
     }
   </style>
 </head>
@@ -253,4 +260,4 @@
     }
   </script>
 </body>
-</html>
+  </html>
