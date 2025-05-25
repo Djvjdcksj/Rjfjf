@@ -14,7 +14,7 @@
       margin: 0;
       background-color: #f4f4f4;
       transition: background-color 0.3s, color 0.3s;
-      padding-top: 80px;
+      padding-top: 150px; /* enough space for 2 stacked ads */
     }
     #topAdContainer {
       position: fixed;
@@ -26,6 +26,7 @@
       padding: 5px;
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
       width: max-content;
+      text-align: center;
     }
     .container {
       background-color: white;
@@ -87,8 +88,9 @@
 </head>
 <body>
 
-  <!-- Top Ad -->
+  <!-- Top Ad Container with Two Ads -->
   <div id="topAdContainer">
+    <!-- First Ad -->
     <script type="text/javascript">
       atOptions = {
         'key' : 'e37d090e983f7aec80cc501fe67f6516',
@@ -99,6 +101,10 @@
       };
     </script>
     <script type="text/javascript" src="//www.highperformanceformat.com/e37d090e983f7aec80cc501fe67f6516/invoke.js"></script>
+
+    <!-- Second Ad -->
+    <script async="async" data-cfasync="false" src="//pl26739054.profitableratecpm.com/cf12c58cb2ba37d63452125c21a88eb2/invoke.js"></script>
+    <div id="container-cf12c58cb2ba37d63452125c21a88eb2"></div>
   </div>
 
   <div class="container">
@@ -247,4 +253,4 @@
     }
   </script>
 </body>
-          </html>
+</html>
