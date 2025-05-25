@@ -3,14 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Base Converter with Ads</title>
+  <title>Jarvis App</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       margin: 0;
       padding: 0;
       background-color: #f4f4f4;
-      transition: background-color 0.3s, color 0.3s;
       display: flex;
       flex-direction: column;
       min-height: 100vh;
@@ -20,7 +19,6 @@
       background: white;
       padding: 5px;
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-      z-index: 1000;
     }
     .container {
       flex: 1;
@@ -37,87 +35,38 @@
       width: 100%;
       max-width: 400px;
     }
-    h1 {
-      text-align: center;
-    }
+    h1 { text-align: center; }
     select, input[type="text"], button {
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      font-size: 16px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
+      width: 100%; padding: 10px; margin: 10px 0;
+      font-size: 16px; border: 1px solid #ccc; border-radius: 4px;
     }
     button {
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
+      background-color: #4CAF50; color: white; border: none;
+      border-radius: 4px; cursor: pointer;
     }
-    button:hover {
-      background-color: #45a049;
-    }
+    button:hover { background-color: #45a049; }
     .result {
-      margin-top: 20px;
-      word-wrap: break-word;
+      margin-top: 20px; word-wrap: break-word;
     }
     .result div {
-      padding: 10px;
-      background-color: #f9f9f9;
-      border: 1px solid #ddd;
-      margin-bottom: 10px;
-      border-radius: 4px;
-    }
-    .dark-mode {
-      background-color: #2f2f2f;
-      color: white;
-    }
-    .dark-mode .app {
-      background-color: #444;
-      color: white;
-    }
-    .dark-mode button {
-      background-color: #555;
-    }
-    .dark-mode .result div {
-      background-color: #333;
-      color: white;
-      border: 1px solid #555;
+      padding: 10px; background-color: #f9f9f9;
+      border: 1px solid #ddd; margin-bottom: 10px; border-radius: 4px;
     }
     @media screen and (max-width: 480px) {
-      .app {
-        padding: 15px;
-        margin: 10px;
-        width: 90%;
-      }
+      .app { padding: 15px; margin: 10px; width: 90%; }
     }
   </style>
 </head>
 <body>
 
   <!-- Top Ad -->
-  <div id="topAd">
-    <script type="text/javascript">
-      atOptions = {
-        'key' : 'e37d090e983f7aec80cc501fe67f6516',
-        'format' : 'iframe',
-        'height' : 50,
-        'width' : 320,
-        'params' : {}
-      };
-    </script>
-    <script type="text/javascript" src="//www.highperformanceformat.com/e37d090e983f7aec80cc501fe67f6516/invoke.js"></script>
-  </div>
+  <div id="topAd"></div>
 
-  <!-- App Content -->
+  <!-- App UI -->
   <div class="container">
     <div class="app">
       <h1>Base Converter</h1>
-
-      <label for="darkModeToggle">
-        <input type="checkbox" id="darkModeToggle"> Dark Mode
-      </label><br>
+      <label><input type="checkbox" id="darkModeToggle"> Dark Mode</label><br>
 
       <select id="inputBase" onchange="convertBase()">
         <option value="10">Decimal</option>
@@ -149,105 +98,71 @@
   </div>
 
   <!-- Bottom Ad -->
-  <div id="bottomAd">
-    <script async="async" data-cfasync="false" src="//pl26739054.profitableratecpm.com/cf12c58cb2ba37d63452125c21a88eb2/invoke.js"></script>
-    <div id="container-cf12c58cb2ba37d63452125c21a88eb2"></div>
-  </div>
+  <div id="bottomAd"></div>
 
+  <!-- Scripts -->
   <script>
+    // Dark Mode Toggle
     document.getElementById('darkModeToggle').addEventListener('change', function () {
       document.body.classList.toggle('dark-mode', this.checked);
     });
 
+    // Base Converter
     function convertBase() {
       const inputBase = document.getElementById("inputBase").value;
       const outputBase = document.getElementById("outputBase").value;
       const inputValue = document.getElementById("inputValue").value.trim();
       const resultDiv = document.getElementById("result");
 
-      if (inputValue === "") {
-        resultDiv.innerHTML = "";
-        return;
-      }
+      if (inputValue === "") return resultDiv.innerHTML = "";
 
       let decimalValue;
-      if (inputBase === "10") {
-        decimalValue = parseFloat(inputValue);
-      } else if (inputBase === "Roman") {
-        decimalValue = fromRoman(inputValue);
-      } else if (inputBase === "Unix") {
-        decimalValue = parseInt(inputValue);
-      } else {
-        decimalValue = parseInt(inputValue, inputBase);
-      }
+      if (inputBase === "10") decimalValue = parseFloat(inputValue);
+      else if (inputBase === "Roman") decimalValue = fromRoman(inputValue);
+      else if (inputBase === "Unix") decimalValue = parseInt(inputValue);
+      else decimalValue = parseInt(inputValue, inputBase);
 
       if (isNaN(decimalValue)) {
-        resultDiv.innerHTML = `<div style="color: red;">Invalid input for base ${inputBase}</div>`;
-        return;
+        return resultDiv.innerHTML = `<div style="color: red;">Invalid input for base ${inputBase}</div>`;
       }
 
       let outputValue;
-      if (outputBase === "10") {
-        outputValue = decimalValue.toString(10);
-      } else if (outputBase === "Roman") {
-        outputValue = toRoman(decimalValue);
-      } else if (outputBase === "Unix") {
-        outputValue = decimalValue;
-      } else if (outputBase === "Base64") {
-        outputValue = encodeBase64(decimalValue.toString());
-      } else {
-        outputValue = decimalValue.toString(outputBase);
-      }
+      if (outputBase === "10") outputValue = decimalValue.toString(10);
+      else if (outputBase === "Roman") outputValue = toRoman(decimalValue);
+      else if (outputBase === "Unix") outputValue = decimalValue;
+      else if (outputBase === "Base64") outputValue = btoa(decimalValue.toString());
+      else outputValue = decimalValue.toString(outputBase);
 
       resultDiv.innerHTML = `<div>Converted Value: ${outputValue}</div>`;
     }
 
     function toRoman(num) {
-      const romanMap = [
-        { value: 1000, symbol: "M" },
-        { value: 900, symbol: "CM" },
-        { value: 500, symbol: "D" },
-        { value: 400, symbol: "CD" },
-        { value: 100, symbol: "C" },
-        { value: 90, symbol: "XC" },
-        { value: 50, symbol: "L" },
-        { value: 40, symbol: "XL" },
-        { value: 10, symbol: "X" },
-        { value: 9, symbol: "IX" },
-        { value: 5, symbol: "V" },
-        { value: 4, symbol: "IV" },
-        { value: 1, symbol: "I" },
+      const map = [
+        {value:1000, symbol:"M"}, {value:900, symbol:"CM"}, {value:500, symbol:"D"},
+        {value:400, symbol:"CD"}, {value:100, symbol:"C"}, {value:90, symbol:"XC"},
+        {value:50, symbol:"L"}, {value:40, symbol:"XL"}, {value:10, symbol:"X"},
+        {value:9, symbol:"IX"}, {value:5, symbol:"V"}, {value:4, symbol:"IV"}, {value:1, symbol:"I"}
       ];
-      let romanNumeral = "";
-      for (let i = 0; i < romanMap.length; i++) {
-        while (num >= romanMap[i].value) {
-          romanNumeral += romanMap[i].symbol;
-          num -= romanMap[i].value;
+      let result = "";
+      for (let i = 0; i < map.length; i++) {
+        while (num >= map[i].value) {
+          result += map[i].symbol;
+          num -= map[i].value;
         }
       }
-      return romanNumeral;
+      return result;
     }
 
     function fromRoman(roman) {
-      const romanMap = {
-        "I": 1, "V": 5, "X": 10, "L": 50, "C": 100, "D": 500, "M": 1000
-      };
-      let sum = 0;
-      let prevValue = 0;
+      const romanMap = {"I":1,"V":5,"X":10,"L":50,"C":100,"D":500,"M":1000};
+      let sum = 0, prev = 0;
       for (let i = roman.length - 1; i >= 0; i--) {
-        const currentValue = romanMap[roman[i]];
-        if (currentValue < prevValue) {
-          sum -= currentValue;
-        } else {
-          sum += currentValue;
-        }
-        prevValue = currentValue;
+        const curr = romanMap[roman[i]];
+        if (curr < prev) sum -= curr;
+        else sum += curr;
+        prev = curr;
       }
       return sum;
-    }
-
-    function encodeBase64(input) {
-      return btoa(input);
     }
 
     function clearInput() {
@@ -260,6 +175,31 @@
       navigator.clipboard.writeText(result).then(() => {
         alert("Result copied to clipboard!");
       });
+    }
+
+    // Load ads only if online
+    if (navigator.onLine) {
+      // Top Ad
+      const topScript = document.createElement('script');
+      topScript.src = "//www.highperformanceformat.com/e37d090e983f7aec80cc501fe67f6516/invoke.js";
+      document.getElementById("topAd").appendChild(topScript);
+      window.atOptions = {
+        'key': 'e37d090e983f7aec80cc501fe67f6516',
+        'format': 'iframe',
+        'height': 50,
+        'width': 320,
+        'params': {}
+      };
+
+      // Bottom Ad
+      const bottomScript = document.createElement('script');
+      bottomScript.async = true;
+      bottomScript.setAttribute("data-cfasync", "false");
+      bottomScript.src = "//pl26739054.profitableratecpm.com/cf12c58cb2ba37d63452125c21a88eb2/invoke.js";
+      document.getElementById("bottomAd").appendChild(bottomScript);
+    } else {
+      document.getElementById("topAd").innerHTML = "<div style='color: gray;'>No Ads (Offline)</div>";
+      document.getElementById("bottomAd").innerHTML = "<div style='color: gray;'>No Ads (Offline)</div>";
     }
   </script>
 </body>
