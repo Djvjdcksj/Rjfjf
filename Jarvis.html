@@ -3,327 +3,255 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jarvis Voice Assistant</title>
+    <title>Base Converter with Extra Features</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #121212;
-            color: white;
-            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
             margin: 0;
-            overflow: hidden;
+            background-color: #f4f4f4;
+            transition: background-color 0.3s, color 0.3s;
         }
         .container {
-            max-width: 600px;
-            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
         }
-        .output {
-            margin: 20px 0;
-            font-size: 20px;
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
+        h1 {
+            text-align: center;
         }
-        .examples {
-            color: #888;
+        select, input[type="text"], button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
             font-size: 16px;
-        }
-
-        /* Mic Button Styles */
-        .mic {
-            position: relative;
-            color: #fff;
-            cursor: pointer;
-            width: 60px;
-            height: 60px;
-            margin: 20px auto;
-        }
-        .mic::before, .mic::after {
-            content: "";
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            border-radius: 100%;
-            z-index: 2;
-            box-shadow: 0 0 10px 5px #1c084f;
-        }
-        .mic::before {
-            width: 60px;
-            height: 60px;
-            background-color: #1a084e;
-        }
-        .mic::after {
-            width: 40px;
-            height: 40px;
-            background-color: #2f1e5f;
-            animation: circle-size 0.8s linear infinite alternate;
-        }
-        .mic-icon {
-            box-sizing: border-box;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(1.5);
-            display: block;
-            width: 20px;
-            height: 16px;
-            border-bottom-left-radius: 120px;
-            border-bottom-right-radius: 120px;
-            border: 2px solid;
-            border-top: 0;
-            margin-top: 10px;
-            z-index: 3;
-        }
-        .mic-icon::before, .mic-icon::after {
-            content: "";
-            display: block;
-            box-sizing: border-box;
-            position: absolute;
-        }
-        .mic-icon::before {
-            width: 2px;
-            height: 5px;
-            top: calc(100% + 1px);
-            left: 50%;
-            transform: translate(-50%, 0);
-            background-color: #fff;
-        }
-        .mic-icon::after {
-            border: 2px solid;
-            width: 8px;
-            height: 18px;
-            left: 50%;
-            top: -10px;
+            border: 1px solid #ccc;
             border-radius: 4px;
-            transform: translate(-50%, 0);
         }
-        .mic-shadow {
-            width: 60px;
-            height: 60px;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            border-radius: 100%;
-            z-index: 1;
-            box-shadow: 0 0 10px 5px #823ca6, 0 0 10px 5px #aab3d2, 0 0 10px 5px #5acee3, 0 0 10px 5px #1b7d8f, 0 0 10px 5px #f30bf5;
-            animation: shadow-rotate 1.5s linear infinite;
-            transform-origin: center;
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
         }
-        @keyframes circle-size {
-            from {
-                width: 40px;
-                height: 40px;
-            }
-            to {
-                width: 50px;
-                height: 50px;
-            }
+        button:hover {
+            background-color: #45a049;
         }
-        @keyframes shadow-rotate {
-            from {
-                transform: translate(-50%, -50%) rotate(0deg);
-            }
-            to {
-                transform: translate(-50%, -50%) rotate(360deg);
-            }
+        .result {
+            margin-top: 20px;
+            word-wrap: break-word;
+        }
+        .result div {
+            padding: 10px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+        .dark-mode {
+            background-color: #2f2f2f;
+            color: white;
+        }
+        .dark-mode .container {
+            background-color: #444;
+            color: white;
+        }
+        .dark-mode button {
+            background-color: #555;
+        }
+        .dark-mode .result div {
+            background-color: #333;
+            color: white;
+            border: 1px solid #555;
         }
     </style>
 </head>
 <body>
+
     <div class="container">
-        <h1>Jarvis Voice Assistant</h1>
-        <div class="mic" onclick="toggleListening()">
-            <i class="mic-icon"></i>
-            <div class="mic-shadow"></div>
-        </div>
-        <p class="output" id="output">Waiting for command...</p>
-        <p class="examples">Try: "What's the time now", "What's the day", "What's the date", "Set reminder [text] in [minutes] minutes", "What is my reminder", "Clear reminders", "Search for funny cat videos", "Who is Elon Musk", "Play song [song name]"</p>
+        <h1>Base Converter</h1>
+
+        <!-- Dark Mode Toggle -->
+        <label for="darkModeToggle">
+            <input type="checkbox" id="darkModeToggle"> Dark Mode
+        </label>
+        <br>
+
+        <!-- Base Selection Dropdowns -->
+        <select id="inputBase" onchange="convertBase()">
+            <option value="10">Decimal</option>
+            <option value="2">Binary</option>
+            <option value="16">Hexadecimal</option>
+            <option value="8">Octal</option>
+            <option value="36">Base 36</option>
+            <option value="Roman">Roman Numerals</option>
+            <option value="Unix">Unix Timestamp</option>
+        </select>
+
+        <input type="text" id="inputValue" placeholder="Enter Value" oninput="convertBase()">
+
+        <!-- Output Base Selection -->
+        <select id="outputBase" onchange="convertBase()">
+            <option value="2">Binary</option>
+            <option value="8">Octal</option>
+            <option value="10">Decimal</option>
+            <option value="16">Hexadecimal</option>
+            <option value="36">Base 36</option>
+            <option value="Roman">Roman Numerals</option>
+            <option value="Unix">Unix Timestamp</option>
+            <option value="Base64">Base64 Encoding</option>
+        </select>
+
+        <button onclick="clearInput()">Clear</button>
+
+        <!-- Result Section -->
+        <div class="result" id="result"></div>
+        <button onclick="copyToClipboard()">Copy Result</button>
     </div>
 
     <script>
-        let isListening = false;
-        let recognition;
-        const output = document.getElementById('output');
+        // Toggle Dark Mode
+        document.getElementById('darkModeToggle').addEventListener('change', function () {
+            document.body.classList.toggle('dark-mode', this.checked);
+        });
 
-        // Initialize reminders array if it doesn't exist
-        if (!localStorage.getItem("reminders")) {
-            localStorage.setItem("reminders", JSON.stringify([]));
-        }
+        // Convert Base Function
+        function convertBase() {
+            const inputBase = document.getElementById("inputBase").value;
+            const outputBase = document.getElementById("outputBase").value;
+            const inputValue = document.getElementById("inputValue").value.trim();
+            const resultDiv = document.getElementById("result");
 
-        // Function to check for due reminders
-        function checkReminders() {
-            const reminders = JSON.parse(localStorage.getItem("reminders"));
-            const now = new Date().getTime();
-
-            reminders.forEach((reminder, index) => {
-                if (reminder.dueTime <= now) {
-                    speak(`Reminder: ${reminder.text}`);
-                    reminders.splice(index, 1); // Remove the reminder after notifying
-                    localStorage.setItem("reminders", JSON.stringify(reminders));
-                }
-            });
-        }
-
-        // Check reminders every second
-        setInterval(checkReminders, 1000);
-
-        function toggleListening() {
-            if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
-                alert("Your browser does not support voice recognition. Try using Chrome.");
+            if (inputValue === "") {
+                resultDiv.innerHTML = "";
                 return;
             }
 
-            if (!isListening) {
-                recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-                recognition.lang = "en-US";
-                recognition.continuous = false;
-                recognition.interimResults = false;
-
-                recognition.onstart = () => {
-                    isListening = true;
-                    output.textContent = 'Listening...';
-                };
-
-                recognition.onresult = (event) => {
-                    const command = event.results[0][0].transcript.toLowerCase();
-                    console.log("Recognized command:", command);
-                    output.textContent = `You said: ${command}`;
-                    handleCommand(command);
-                };
-
-                recognition.onerror = (event) => {
-                    output.textContent = `Error: ${event.error}. Try again.`;
-                    stopListening();
-                };
-
-                recognition.onend = stopListening;
-                recognition.start();
+            let decimalValue;
+            if (inputBase === "10") {
+                decimalValue = parseFloat(inputValue); // Decimal
+            } else if (inputBase === "Roman") {
+                decimalValue = fromRoman(inputValue); // Roman to Decimal
+            } else if (inputBase === "Unix") {
+                decimalValue = parseInt(inputValue); // Unix timestamp to Decimal
             } else {
-                stopListening();
+                decimalValue = parseInt(inputValue, inputBase); // Convert from other bases to decimal
             }
+
+            if (isNaN(decimalValue)) {
+                resultDiv.innerHTML = `<div style="color: red;">Invalid input for base ${inputBase}</div>`;
+                return;
+            }
+
+            let outputValue;
+            if (outputBase === "10") {
+                outputValue = decimalValue.toString(10); // Decimal output
+            } else if (outputBase === "Roman") {
+                outputValue = toRoman(decimalValue); // Decimal to Roman
+            } else if (outputBase === "Unix") {
+                outputValue = decimalValue; // Unix timestamp as is
+            } else if (outputBase === "Base64") {
+                outputValue = encodeBase64(decimalValue.toString()); // Base64 Encoding
+            } else {
+                outputValue = decimalValue.toString(outputBase); // Binary, Hex, Octal, etc.
+            }
+
+            resultDiv.innerHTML = `<div>Converted Value: ${outputValue}</div>`;
         }
 
-        function stopListening() {
-            if (recognition) {
-                recognition.stop();
+        // Roman Numeral Conversion Functions
+        function toRoman(num) {
+            const romanMap = [
+                { value: 1000, symbol: "M" },
+                { value: 900, symbol: "CM" },
+                { value: 500, symbol: "D" },
+                { value: 400, symbol: "CD" },
+                { value: 100, symbol: "C" },
+                { value: 90, symbol: "XC" },
+                { value: 50, symbol: "L" },
+                { value: 40, symbol: "XL" },
+                { value: 10, symbol: "X" },
+                { value: 9, symbol: "IX" },
+                { value: 5, symbol: "V" },
+                { value: 4, symbol: "IV" },
+                { value: 1, symbol: "I" },
+            ];
+            
+            let romanNumeral = "";
+            for (let i = 0; i < romanMap.length; i++) {
+                while (num >= romanMap[i].value) {
+                    romanNumeral += romanMap[i].symbol;
+                    num -= romanMap[i].value;
+                }
             }
-            isListening = false;
+            return romanNumeral;
         }
 
-        async function handleCommand(command) {
-            try {
-                if (command.includes("time") || command.includes("what's the time")) {
-                    const now = new Date();
-                    const hours = now.getHours() % 12 || 12;
-                    const minutes = now.getMinutes().toString().padStart(2, '0');
-                    const period = now.getHours() >= 12 ? "PM" : "AM";
-                    const responseText = `The time is ${hours}:${minutes} ${period}`;
-                    await speak(responseText);
-                    return;
-                }
+        function fromRoman(roman) {
+            const romanMap = {
+                "I": 1, "V": 5, "X": 10, "L": 50, "C": 100, "D": 500, "M": 1000
+            };
 
-                if (command.includes("day") || command.includes("what's the day")) {
-                    const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-                    const now = new Date();
-                    const day = days[now.getDay()];
-                    await speak(`Today is ${day}`);
-                    return;
-                }
-
-                if (command.includes("date") || command.includes("what's the date")) {
-                    const now = new Date();
-                    const date = now.toLocaleDateString();
-                    await speak(`Today's date is ${date}`);
-                    return;
-                }
-
-                if (command.includes("search for")) {
-                    const query = command.replace("search for", "").trim();
-                    const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
-                    window.open(searchUrl, "_blank");
-                    await speak(`Searching for ${query}`);
-                    return;
-                }
-
-                if (command.includes("who is ")) {
-                    const person = command.replace("who is ", "").trim();
-                    const response = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(person)}`);
-                    const data = await response.json();
-                    await speak(data.extract || "Sorry, no information available");
-                    return;
-                }
-
-                if (command.includes("play song") || command.includes("sing")) {
-                    const song = command.replace("play song", "").replace("sing", "").trim();
-                    if (song) {
-                        const searchUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(song)}`;
-                        window.open(searchUrl, "_blank");
-                        await speak(`Playing ${song}`);
-                    } else {
-                        await speak("Please specify a song name.");
-                    }
-                    return;
-                }
-
-                if (command.includes("set reminder")) {
-                    const reminderText = command.replace("set reminder", "").trim();
-                    const minutesMatch = reminderText.match(/\d+/);
-                    const minutes = minutesMatch ? parseInt(minutesMatch[0]) : 1; // Default to 1 minute if no time is specified
-                    const dueTime = new Date().getTime() + minutes * 60000; // Convert minutes to milliseconds
-
-                    const reminders = JSON.parse(localStorage.getItem("reminders"));
-                    reminders.push({ text: reminderText, dueTime });
-                    localStorage.setItem("reminders", JSON.stringify(reminders));
-
-                    await speak(`Reminder set: ${reminderText} in ${minutes} minute(s)`);
-                    return;
-                }
-
-                if (command.includes("what is my reminder")) {
-                    const reminders = JSON.parse(localStorage.getItem("reminders"));
-                    if (reminders.length > 0) {
-                        await speak(`Your reminders are: ${reminders.map(r => r.text).join(", ")}`);
-                    } else {
-                        await speak("No reminders set.");
-                    }
-                    return;
-                }
-
-                if (command.includes("clear reminders")) {
-                    localStorage.setItem("reminders", JSON.stringify([]));
-                    await speak("All reminders have been cleared.");
-                    return;
-                }
-
-                await speak("I didn't understand that.");
-            } catch (error) {
-                console.error("Error:", error);
-                await speak("An error occurred.");
-            }
-            stopListening();
-        }
-
-        function speak(text) {
-            output.textContent = text;
-
-            return new Promise((resolve) => {
-                if ('speechSynthesis' in window) {
-                    const utterance = new SpeechSynthesisUtterance(text);
-                    utterance.onend = resolve;
-                    utterance.onerror = resolve;
-                    speechSynthesis.speak(utterance);
+            let sum = 0;
+            let prevValue = 0;
+            for (let i = roman.length - 1; i >= 0; i--) {
+                const currentValue = romanMap[roman[i]];
+                if (currentValue < prevValue) {
+                    sum -= currentValue;
                 } else {
-                    alert("Your browser does not support speech synthesis.");
-                    resolve();
+                    sum += currentValue;
                 }
+                prevValue = currentValue;
+            }
+
+            return sum;
+        }
+
+        // Base64 Encoding
+        function encodeBase64(input) {
+            return btoa(input); // Base64 encoding
+        }
+
+        // Unix Timestamp to Date
+        function unixToDate(timestamp) {
+            const date = new Date(timestamp * 1000);  // Convert to milliseconds
+            return date.toLocaleString();  // Format as a readable date
+        }
+
+        // Clear Input Function
+        function clearInput() {
+            document.getElementById("inputValue").value = "";
+            document.getElementById("result").innerHTML = "";
+        }
+
+        // Copy Result to Clipboard
+        function copyToClipboard() {
+            const result = document.getElementById("result").innerText;
+            navigator.clipboard.writeText(result).then(() => {
+                alert("Result copied to clipboard!");
             });
         }
+    </script>
 
-        window.onload = () => {
-            speak("I am Jarvis, your personal assistant.");
+
+    <!-- Ad Script -->
+    <script type="text/javascript">
+        atOptions = {
+            'key' : 'e37d090e983f7aec80cc501fe67f6516',
+            'format' : 'iframe',
+            'height' : 50,
+            'width' : 320,
+            'params' : {}
         };
     </script>
+    <script type="text/javascript" src="//www.highperformanceformat.com/e37d090e983f7aec80cc501fe67f6516/invoke.js"></script>
+
 </body>
 </html>
