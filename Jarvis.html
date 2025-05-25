@@ -3,38 +3,39 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Base Converter with Extra Features</title>
+  <title>Base Converter with Ads</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      display: flex;
-      justify-content: center;
+      margin: 0;
+      padding: 0;
       background-color: #f4f4f4;
       transition: background-color 0.3s, color 0.3s;
-      margin: 0;
-      padding-top: 150px;
+      display: flex;
+      flex-direction: column;
       min-height: 100vh;
     }
-    #topAdContainer {
-      position: fixed;
-      top: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 1000;
+    #topAd, #bottomAd {
+      text-align: center;
       background: white;
       padding: 5px;
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-      width: max-content;
-      text-align: center;
+      z-index: 1000;
     }
     .container {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .app {
       background-color: white;
       padding: 20px;
       border-radius: 8px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       width: 100%;
       max-width: 400px;
-      margin: 20px;
     }
     h1 {
       text-align: center;
@@ -72,7 +73,7 @@
       background-color: #2f2f2f;
       color: white;
     }
-    .dark-mode .container {
+    .dark-mode .app {
       background-color: #444;
       color: white;
     }
@@ -85,7 +86,7 @@
       border: 1px solid #555;
     }
     @media screen and (max-width: 480px) {
-      .container {
+      .app {
         padding: 15px;
         margin: 10px;
         width: 90%;
@@ -95,9 +96,8 @@
 </head>
 <body>
 
-  <!-- Top Ad Container with Two Ads -->
-  <div id="topAdContainer">
-    <!-- First Ad -->
+  <!-- Top Ad -->
+  <div id="topAd">
     <script type="text/javascript">
       atOptions = {
         'key' : 'e37d090e983f7aec80cc501fe67f6516',
@@ -108,45 +108,50 @@
       };
     </script>
     <script type="text/javascript" src="//www.highperformanceformat.com/e37d090e983f7aec80cc501fe67f6516/invoke.js"></script>
-
-    <!-- Second Ad -->
-    <script async="async" data-cfasync="false" src="//pl26739054.profitableratecpm.com/cf12c58cb2ba37d63452125c21a88eb2/invoke.js"></script>
-    <div id="container-cf12c58cb2ba37d63452125c21a88eb2"></div>
   </div>
 
+  <!-- App Content -->
   <div class="container">
-    <h1>Base Converter</h1>
+    <div class="app">
+      <h1>Base Converter</h1>
 
-    <label for="darkModeToggle">
-      <input type="checkbox" id="darkModeToggle"> Dark Mode
-    </label><br>
+      <label for="darkModeToggle">
+        <input type="checkbox" id="darkModeToggle"> Dark Mode
+      </label><br>
 
-    <select id="inputBase" onchange="convertBase()">
-      <option value="10">Decimal</option>
-      <option value="2">Binary</option>
-      <option value="16">Hexadecimal</option>
-      <option value="8">Octal</option>
-      <option value="36">Base 36</option>
-      <option value="Roman">Roman Numerals</option>
-      <option value="Unix">Unix Timestamp</option>
-    </select>
+      <select id="inputBase" onchange="convertBase()">
+        <option value="10">Decimal</option>
+        <option value="2">Binary</option>
+        <option value="16">Hexadecimal</option>
+        <option value="8">Octal</option>
+        <option value="36">Base 36</option>
+        <option value="Roman">Roman Numerals</option>
+        <option value="Unix">Unix Timestamp</option>
+      </select>
 
-    <input type="text" id="inputValue" placeholder="Enter Value" oninput="convertBase()">
+      <input type="text" id="inputValue" placeholder="Enter Value" oninput="convertBase()">
 
-    <select id="outputBase" onchange="convertBase()">
-      <option value="2">Binary</option>
-      <option value="8">Octal</option>
-      <option value="10">Decimal</option>
-      <option value="16">Hexadecimal</option>
-      <option value="36">Base 36</option>
-      <option value="Roman">Roman Numerals</option>
-      <option value="Unix">Unix Timestamp</option>
-      <option value="Base64">Base64 Encoding</option>
-    </select>
+      <select id="outputBase" onchange="convertBase()">
+        <option value="2">Binary</option>
+        <option value="8">Octal</option>
+        <option value="10">Decimal</option>
+        <option value="16">Hexadecimal</option>
+        <option value="36">Base 36</option>
+        <option value="Roman">Roman Numerals</option>
+        <option value="Unix">Unix Timestamp</option>
+        <option value="Base64">Base64 Encoding</option>
+      </select>
 
-    <button onclick="clearInput()">Clear</button>
-    <div class="result" id="result"></div>
-    <button onclick="copyToClipboard()">Copy Result</button>
+      <button onclick="clearInput()">Clear</button>
+      <div class="result" id="result"></div>
+      <button onclick="copyToClipboard()">Copy Result</button>
+    </div>
+  </div>
+
+  <!-- Bottom Ad -->
+  <div id="bottomAd">
+    <script async="async" data-cfasync="false" src="//pl26739054.profitableratecpm.com/cf12c58cb2ba37d63452125c21a88eb2/invoke.js"></script>
+    <div id="container-cf12c58cb2ba37d63452125c21a88eb2"></div>
   </div>
 
   <script>
@@ -213,7 +218,6 @@
         { value: 4, symbol: "IV" },
         { value: 1, symbol: "I" },
       ];
-
       let romanNumeral = "";
       for (let i = 0; i < romanMap.length; i++) {
         while (num >= romanMap[i].value) {
@@ -228,7 +232,6 @@
       const romanMap = {
         "I": 1, "V": 5, "X": 10, "L": 50, "C": 100, "D": 500, "M": 1000
       };
-
       let sum = 0;
       let prevValue = 0;
       for (let i = roman.length - 1; i >= 0; i--) {
@@ -260,4 +263,4 @@
     }
   </script>
 </body>
-  </html>
+</html>
