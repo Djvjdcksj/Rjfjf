@@ -1,257 +1,195 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Base Converter with Extra Features</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f4f4f4;
-            transition: background-color 0.3s, color 0.3s;
-        }
-        .container {
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 400px;
-        }
-        h1 {
-            text-align: center;
-        }
-        select, input[type="text"], button {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        .result {
-            margin-top: 20px;
-            word-wrap: break-word;
-        }
-        .result div {
-            padding: 10px;
-            background-color: #f9f9f9;
-            border: 1px solid #ddd;
-            margin-bottom: 10px;
-            border-radius: 4px;
-        }
-        .dark-mode {
-            background-color: #2f2f2f;
-            color: white;
-        }
-        .dark-mode .container {
-            background-color: #444;
-            color: white;
-        }
-        .dark-mode button {
-            background-color: #555;
-        }
-        .dark-mode .result div {
-            background-color: #333;
-            color: white;
-            border: 1px solid #555;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>base Converter App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    #topAd, #bottomAd {
+      text-align: center;
+      background: white;
+      padding: 5px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+    .container {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .app {
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 400px;
+    }
+    h1 { text-align: center; }
+    select, input[type="text"], button {
+      width: 100%; padding: 10px; margin: 10px 0;
+      font-size: 16px; border: 1px solid #ccc; border-radius: 4px;
+    }
+    button {
+      background-color: #4CAF50; color: white; border: none;
+      border-radius: 4px; cursor: pointer;
+    }
+    button:hover { background-color: #45a049; }
+    .result {
+      margin-top: 20px; word-wrap: break-word;
+    }
+    .result div {
+      padding: 10px; background-color: #f9f9f9;
+      border: 1px solid #ddd; margin-bottom: 10px; border-radius: 4px;
+    }
+    @media screen and (max-width: 480px) {
+      .app { padding: 15px; margin: 10px; width: 90%; }
+    }
+  </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>Base Converter</h1>
+  <!-- Top Ad -->
+  <div id="topAd">
+    <script async="async" data-cfasync="false" src="//pl26739054.profitableratecpm.com/cf12c58cb2ba37d63452125c21a88eb2/invoke.js"></script>
+    <div id="container-cf12c58cb2ba37d63452125c21a88eb2"></div>
+  </div>
 
-        <!-- Dark Mode Toggle -->
-        <label for="darkModeToggle">
-            <input type="checkbox" id="darkModeToggle"> Dark Mode
-        </label>
-        <br>
+  <!-- App UI -->
+  <div class="container">
+    <div class="app">
+      <h1>Base Converter</h1>
+      <label><input type="checkbox" id="darkModeToggle"> Dark Mode</label><br>
 
-        <!-- Base Selection Dropdowns -->
-        <select id="inputBase" onchange="convertBase()">
-            <option value="10">Decimal</option>
-            <option value="2">Binary</option>
-            <option value="16">Hexadecimal</option>
-            <option value="8">Octal</option>
-            <option value="36">Base 36</option>
-            <option value="Roman">Roman Numerals</option>
-            <option value="Unix">Unix Timestamp</option>
-        </select>
+      <select id="inputBase" onchange="convertBase()">
+        <option value="10">Decimal</option>
+        <option value="2">Binary</option>
+        <option value="16">Hexadecimal</option>
+        <option value="8">Octal</option>
+        <option value="36">Base 36</option>
+        <option value="Roman">Roman Numerals</option>
+        <option value="Unix">Unix Timestamp</option>
+      </select>
 
-        <input type="text" id="inputValue" placeholder="Enter Value" oninput="convertBase()">
+      <input type="text" id="inputValue" placeholder="Enter Value" oninput="convertBase()">
 
-        <!-- Output Base Selection -->
-        <select id="outputBase" onchange="convertBase()">
-            <option value="2">Binary</option>
-            <option value="8">Octal</option>
-            <option value="10">Decimal</option>
-            <option value="16">Hexadecimal</option>
-            <option value="36">Base 36</option>
-            <option value="Roman">Roman Numerals</option>
-            <option value="Unix">Unix Timestamp</option>
-            <option value="Base64">Base64 Encoding</option>
-        </select>
+      <select id="outputBase" onchange="convertBase()">
+        <option value="2">Binary</option>
+        <option value="8">Octal</option>
+        <option value="10">Decimal</option>
+        <option value="16">Hexadecimal</option>
+        <option value="36">Base 36</option>
+        <option value="Roman">Roman Numerals</option>
+        <option value="Unix">Unix Timestamp</option>
+        <option value="Base64">Base64 Encoding</option>
+      </select>
 
-        <button onclick="clearInput()">Clear</button>
-
-        <!-- Result Section -->
-        <div class="result" id="result"></div>
-        <button onclick="copyToClipboard()">Copy Result</button>
+      <button onclick="clearInput()">Clear</button>
+      <div class="result" id="result"></div>
+      <button onclick="copyToClipboard()">Copy Result</button>
     </div>
+  </div>
 
-    <script>
-        // Toggle Dark Mode
-        document.getElementById('darkModeToggle').addEventListener('change', function () {
-            document.body.classList.toggle('dark-mode', this.checked);
-        });
-
-        // Convert Base Function
-        function convertBase() {
-            const inputBase = document.getElementById("inputBase").value;
-            const outputBase = document.getElementById("outputBase").value;
-            const inputValue = document.getElementById("inputValue").value.trim();
-            const resultDiv = document.getElementById("result");
-
-            if (inputValue === "") {
-                resultDiv.innerHTML = "";
-                return;
-            }
-
-            let decimalValue;
-            if (inputBase === "10") {
-                decimalValue = parseFloat(inputValue); // Decimal
-            } else if (inputBase === "Roman") {
-                decimalValue = fromRoman(inputValue); // Roman to Decimal
-            } else if (inputBase === "Unix") {
-                decimalValue = parseInt(inputValue); // Unix timestamp to Decimal
-            } else {
-                decimalValue = parseInt(inputValue, inputBase); // Convert from other bases to decimal
-            }
-
-            if (isNaN(decimalValue)) {
-                resultDiv.innerHTML = `<div style="color: red;">Invalid input for base ${inputBase}</div>`;
-                return;
-            }
-
-            let outputValue;
-            if (outputBase === "10") {
-                outputValue = decimalValue.toString(10); // Decimal output
-            } else if (outputBase === "Roman") {
-                outputValue = toRoman(decimalValue); // Decimal to Roman
-            } else if (outputBase === "Unix") {
-                outputValue = decimalValue; // Unix timestamp as is
-            } else if (outputBase === "Base64") {
-                outputValue = encodeBase64(decimalValue.toString()); // Base64 Encoding
-            } else {
-                outputValue = decimalValue.toString(outputBase); // Binary, Hex, Octal, etc.
-            }
-
-            resultDiv.innerHTML = `<div>Converted Value: ${outputValue}</div>`;
-        }
-
-        // Roman Numeral Conversion Functions
-        function toRoman(num) {
-            const romanMap = [
-                { value: 1000, symbol: "M" },
-                { value: 900, symbol: "CM" },
-                { value: 500, symbol: "D" },
-                { value: 400, symbol: "CD" },
-                { value: 100, symbol: "C" },
-                { value: 90, symbol: "XC" },
-                { value: 50, symbol: "L" },
-                { value: 40, symbol: "XL" },
-                { value: 10, symbol: "X" },
-                { value: 9, symbol: "IX" },
-                { value: 5, symbol: "V" },
-                { value: 4, symbol: "IV" },
-                { value: 1, symbol: "I" },
-            ];
-            
-            let romanNumeral = "";
-            for (let i = 0; i < romanMap.length; i++) {
-                while (num >= romanMap[i].value) {
-                    romanNumeral += romanMap[i].symbol;
-                    num -= romanMap[i].value;
-                }
-            }
-            return romanNumeral;
-        }
-
-        function fromRoman(roman) {
-            const romanMap = {
-                "I": 1, "V": 5, "X": 10, "L": 50, "C": 100, "D": 500, "M": 1000
-            };
-
-            let sum = 0;
-            let prevValue = 0;
-            for (let i = roman.length - 1; i >= 0; i--) {
-                const currentValue = romanMap[roman[i]];
-                if (currentValue < prevValue) {
-                    sum -= currentValue;
-                } else {
-                    sum += currentValue;
-                }
-                prevValue = currentValue;
-            }
-
-            return sum;
-        }
-
-        // Base64 Encoding
-        function encodeBase64(input) {
-            return btoa(input); // Base64 encoding
-        }
-
-        // Unix Timestamp to Date
-        function unixToDate(timestamp) {
-            const date = new Date(timestamp * 1000);  // Convert to milliseconds
-            return date.toLocaleString();  // Format as a readable date
-        }
-
-        // Clear Input Function
-        function clearInput() {
-            document.getElementById("inputValue").value = "";
-            document.getElementById("result").innerHTML = "";
-        }
-
-        // Copy Result to Clipboard
-        function copyToClipboard() {
-            const result = document.getElementById("result").innerText;
-            navigator.clipboard.writeText(result).then(() => {
-                alert("Result copied to clipboard!");
-            });
-        }
-    </script>
-
-
-    <!-- Ad Script -->
+  <!-- Bottom Ad -->
+  <div id="bottomAd">
     <script type="text/javascript">
-        atOptions = {
-            'key' : 'e37d090e983f7aec80cc501fe67f6516',
-            'format' : 'iframe',
-            'height' : 50,
-            'width' : 320,
-            'params' : {}
-        };
+      atOptions = {
+        'key' : 'e37d090e983f7aec80cc501fe67f6516',
+        'format' : 'iframe',
+        'height' : 50,
+        'width' : 320,
+        'params' : {}
+      };
     </script>
     <script type="text/javascript" src="//www.highperformanceformat.com/e37d090e983f7aec80cc501fe67f6516/invoke.js"></script>
+  </div>
 
+  <!-- App Script -->
+  <script>
+    // Dark Mode Toggle
+    document.getElementById('darkModeToggle').addEventListener('change', function () {
+      document.body.classList.toggle('dark-mode', this.checked);
+    });
+
+    // Base Converter
+    function convertBase() {
+      const inputBase = document.getElementById("inputBase").value;
+      const outputBase = document.getElementById("outputBase").value;
+      const inputValue = document.getElementById("inputValue").value.trim();
+      const resultDiv = document.getElementById("result");
+
+      if (inputValue === "") return resultDiv.innerHTML = "";
+
+      let decimalValue;
+      if (inputBase === "10") decimalValue = parseFloat(inputValue);
+      else if (inputBase === "Roman") decimalValue = fromRoman(inputValue);
+      else if (inputBase === "Unix") decimalValue = parseInt(inputValue);
+      else decimalValue = parseInt(inputValue, inputBase);
+
+      if (isNaN(decimalValue)) {
+        return resultDiv.innerHTML = `<div style="color: red;">Invalid input for base ${inputBase}</div>`;
+      }
+
+      let outputValue;
+      if (outputBase === "10") outputValue = decimalValue.toString(10);
+      else if (outputBase === "Roman") outputValue = toRoman(decimalValue);
+      else if (outputBase === "Unix") outputValue = decimalValue;
+      else if (outputBase === "Base64") outputValue = btoa(decimalValue.toString());
+      else outputValue = decimalValue.toString(outputBase);
+
+      resultDiv.innerHTML = `<div>Converted Value: ${outputValue}</div>`;
+    }
+
+    function toRoman(num) {
+      const map = [
+        {value:1000, symbol:"M"}, {value:900, symbol:"CM"}, {value:500, symbol:"D"},
+        {value:400, symbol:"CD"}, {value:100, symbol:"C"}, {value:90, symbol:"XC"},
+        {value:50, symbol:"L"}, {value:40, symbol:"XL"}, {value:10, symbol:"X"},
+        {value:9, symbol:"IX"}, {value:5, symbol:"V"}, {value:4, symbol:"IV"}, {value:1, symbol:"I"}
+      ];
+      let result = "";
+      for (let i = 0; i < map.length; i++) {
+        while (num >= map[i].value) {
+          result += map[i].symbol;
+          num -= map[i].value;
+        }
+      }
+      return result;
+    }
+
+    function fromRoman(roman) {
+      const romanMap = {"I":1,"V":5,"X":10,"L":50,"C":100,"D":500,"M":1000};
+      let sum = 0, prev = 0;
+      for (let i = roman.length - 1; i >= 0; i--) {
+        const curr = romanMap[roman[i]];
+        if (curr < prev) sum -= curr;
+        else sum += curr;
+        prev = curr;
+      }
+      return sum;
+    }
+
+    function clearInput() {
+      document.getElementById("inputValue").value = "";
+      document.getElementById("result").innerHTML = "";
+    }
+
+    function copyToClipboard() {
+      const result = document.getElementById("result").innerText;
+      navigator.clipboard.writeText(result).then(() => {
+        alert("Result copied to clipboard!");
+      });
+    }
+  </script>
 </body>
-    </html>    
+    </html>
